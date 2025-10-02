@@ -12,8 +12,8 @@ import os
 #set OpenAI API key from secrets.
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
-st.set_page_config(page_title="Chat with PDF", page_icon="📚")
-st.title("Ask questions about your PDFs 📚")
+st.set_page_config(page_title="Chat with PDF(s)", page_icon="📚")
+st.title("Chat with your PDF(s) 📚")
 
 #initialize session state variables.
 if "conversation" not in st.session_state:
@@ -70,19 +70,19 @@ def get_conversation_chain(vectorstore):
 
 def process_docs(pdf_docs):
     try:
-        # Get PDF text
+        #get PDF text.
         raw_text = get_pdf_text(pdf_docs)
         
-        # Get text chunks
+        #get text chunks.
         text_chunks = get_text_chunks(raw_text)
         
-        # Create embeddings
+        #create embeddings.
         embeddings = OpenAIEmbeddings()
         
-        # Create vector store using FAISS
+        #create vector store using FAISS.
         vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
         
-        # Create conversation chain
+        #create conversation chain.
         st.session_state.conversation = get_conversation_chain(vectorstore)
         
         st.session_state.processComplete = True
@@ -96,7 +96,7 @@ def process_docs(pdf_docs):
 with st.sidebar:
     st.subheader("Your Document(s):")
     pdf_docs = st.file_uploader(
-        "Upload your PDF(s) here",
+        "Upload your PDF(s) here.",
         type="pdf",
         accept_multiple_files=True
     )
@@ -130,4 +130,5 @@ if st.session_state.processComplete:
 #display initial instructions.
 else:
     st.write("👈 Upload your PDFs in the sidebar to get started!")
+
 
