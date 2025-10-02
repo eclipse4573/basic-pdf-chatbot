@@ -9,14 +9,13 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.prompts import PromptTemplate
 import os
 
-# Set OpenAI API key from secrets
+#set OpenAI API key from secrets.
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
-# Page configuration
 st.set_page_config(page_title="Chat with PDF", page_icon="📚")
-st.title("Chat with your PDF 📚")
+st.title("Ask questions about your PDFs 📚")
 
-# Initialize session state variables
+#initialize session state variables.
 if "conversation" not in st.session_state:
     st.session_state.conversation = None
 if "chat_history" not in st.session_state:
@@ -93,24 +92,24 @@ def process_docs(pdf_docs):
         st.error(f"An error occurred during processing: {str(e)}")
         return False
 
-# Sidebar for PDF upload
+#sidebar for PDF upload.
 with st.sidebar:
-    st.subheader("Your Documents")
+    st.subheader("Your Document(s):")
     pdf_docs = st.file_uploader(
-        "Upload your PDFs here",
+        "Upload your PDF(s) here",
         type="pdf",
         accept_multiple_files=True
     )
     
     if st.button("Process") and pdf_docs:
-        with st.spinner("Processing your PDFs..."):
+        with st.spinner("Processing your PDF(s)..."):
             success = process_docs(pdf_docs)
             if success:
                 st.success("Processing complete!")
 
-# Main chat interface
+#main chat interface.
 if st.session_state.processComplete:
-    user_question = st.chat_input("Ask a question about your documents:")
+    user_question = st.chat_input("Ask a question about your document(s)...")
     
     if user_question:
         try:
@@ -118,16 +117,17 @@ if st.session_state.processComplete:
                 response = st.session_state.conversation({
                     "question": user_question
                 })
-                st.session_state.chat_history.append(("You", user_question))
-                st.session_state.chat_history.append(("Bot", response["answer"]))
+                st.session_state.chat_history.append(("🏋️‍♀️", user_question))
+                st.session_state.chat_history.append(("🤖", response["answer"]))
         except Exception as e:
-            st.error(f"An error occurred during chat: {str(e)}")
+            st.error(f"An error occurred: {str(e)}")
 
-    # Display chat history
+    #display chat history.
     for role, message in st.session_state.chat_history:
         with st.chat_message(role):
             st.write(message)
 
-# Display initial instructions
+#display initial instructions.
 else:
     st.write("👈 Upload your PDFs in the sidebar to get started!")
+
